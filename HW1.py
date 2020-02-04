@@ -8,10 +8,8 @@ Created on Sat Jan 25 22:51:09 2020
 # Question 1   #
 # Merkel Trees #
 ################
-import hashlib, json
-from collections import OrderedDict
 import math
-
+print("Merkle Tree Section")
 
 # Given:
 plainTextList = ["POT", "PIE", "CAT", "COW", "RAT", "OWL", "YAK"]
@@ -38,10 +36,6 @@ def getStringHash(inString):
 # Used to comute the hash of two hashes
 def getIntHash(leftVal, rightVal):
     return (countBitsSet(leftVal) + countBitsSet(rightVal))%15
-
-# Test 1
-potHash = getStringHash("POT")
-print(potHash)
 
 # Create a node class
 class Node:
@@ -97,23 +91,19 @@ leafList = balanceTree(leafList)
 buildTree(leafList)
 
 
-# Need either global or class varibles to do this effectively
-copath = []# Track the hashes needed to verify results
-visited = {}# Make sure we only vistit nodes once
-
 def copathRecurse(node, traveledUp):
     visited[node] = True;
     if(traveledUp):
         if(node.left != None and node.left not in visited):
-            print("Searching Left")
+            #print("Searching Left")
             copath.append(node.hashVal)
             return copathRecurse(node.left, False)
         elif(node.right != None and node.right not in visited):
-            print("Searching Right")
+            #print("Searching Right")
             copath.append(node.hashVal)
             return copathRecurse(node.right, False)
     if(node.parent != None):
-        print("Searching Parent")
+        #print("Searching Parent")
         return copathRecurse(node.parent, True)
 
 
@@ -126,123 +116,64 @@ def populateCopath(word):
         copathRecurse(leaf, False)
     else:
         return None
+
+# Create function to evaluate co-path
+def evaluateCoPath(path):
+    result = path[0]
+    for i in range(1, len(path)):
+        result = getIntHash(result, path[i])
+    return result
+
+# Need either global or class varibles to do this effectively
+copath = []# Track the hashes needed to verify results
+visited = {}# Make sure we only vistit nodes once
         
 # Perform the Actual Query
-populateCopath("PIE")
-
-print(copath)
-print(visited)
-
-# Check Hash
-
+populateCopath("RAT")
+print("CoPath of RAT: ", copath)
+print("Evaluation of CoPath: ", evaluateCoPath(copath))
+copath = []
+populateCopath("DOG")
+print("CoPath of DOG: ", copath, "\n\n")
 
 ##############
 # Question 2 #
 ##############
 
 ################
-# DES Section #
-###############
-"""
-from Crypto.Cipher import DES
+# DES Section  #
+################
+from des import DesKey
+print("DES Section")
+plainText = b"This is fun!"
+
+# Create DES Key
+key = DesKey(b"12345678")                  # for DES
+cipherText = key.encrypt(plainText, padding=True)
+
+print("DES Cipher Text: ", cipherText)
+
+decryptedMessage = key.decrypt(cipherText)
+
+print("DES Decrypted Message: ", decryptedMessage)
 
 
-# 8-Byte Key
-sym_key = b'LoveDogs'
-data = b'this is total crap'
-
-# Create the encryption Cipher
-e_cipher = DES.new(sym_key, DES.MODE_CFB)
-
-# Want to include the initialization vector
-iv = e_cipher.iv
-
-# Encrypt the Data
-e_data = iv + e_cipher.encrypt(data)
-
-# Create Decryption Cipher
-d_cipher = DES.new(sym_key, DES.MODE_CFB)
-
-# Decrypt the Data
-d_data = d_cipher.decrypt(e_data)
-
-print("Enrypted Data: ", e_data)
-print("Decrypted Data: ", d_data)
-"""
 ###############
 # RSA Section #
 ###############
-"""from Crypto.Random import get_random_bytes
-from Crypto.Cipher import AES, PKCS1_OAEP
-from Crypto.PublicKey import RSA
+import rsa
+print("\n\nRSA Section")
+# Generate Public/Private Key Pair
+(pubkey, privkey) = rsa.newkeys(512)
 
-# Data to Encrypt
-data = "I met aliens in UFO. Here is the map.".encode("utf-8")
+print(pubkey, "\n")
+print(privkey, "\n")
 
-# Generate Keys
-key = RSA.generate(2048)
+plainText = "This is fun!".encode('utf8');
 
-# Private Key
-private_key = key.export_key()
+# Encrypt with the public key
+cipherText = rsa.encrypt(plainText, pubkey);
+print("CipherText: ", cipherText)
 
-# Private Key
-public_key = key.publickey().export_key()
-file_out = open("receiver.pem", "wb")
-file_out.write(public_key)
-
-file_out = open("encrypted_data.bin", "wb")
-
-recipient_key = public_key#RSA.import_key(open("receiver.pem").read())
-session_key = get_random_bytes(16)
-
-# Encrypt the session key with the public RSA key
-cipher_rsa = PKCS1_OAEP.new(recipient_key)
-#enc_session_key = cipher_rsa.encrypt(session_key)
-
-# Encrypt the data with the AES session key
-cipher_aes = AES.new(session_key, AES.MODE_EAX)
-ciphertext, tag = cipher_aes.encrypt_and_digest(data)
-#RSA.import_key(open("private.pem").read())
-
-
-# Decrypt the session key with the private RSA key
-cipher_rsa = PKCS1_OAEP.new(private_key)
-#session_key = cipher_rsa.decrypt(enc_session_key)
-
-# Decrypt the data with the AES session key
-data = cipher_aes.decrypt_and_verify(ciphertext, tag)
-print(data.decode("utf-8"))"""
-
-"""
-# Verbatum....
-from Crypto.PublicKey import RSA
-
-key = RSA.generate(2048)
-private_key = key.export_key()
-file_out = open("private.pem", "wb")
-file_out.write(private_key)
-
-public_key = key.publickey().export_key()
-file_out = open("receiver.pem", "wb")
-file_out.write(public_key)
-
-
-from Crypto.PublicKey import RSA
-from Crypto.Random import get_random_bytes
-from Crypto.Cipher import AES, PKCS1_OAEP
-
-data = bytes("I met aliens in UFO. Here is the map.", encoding="utf8")
-file_out = open("encrypted_data.bin", "wb")
-
-recipient_key = RSA.import_key(open("receiver.pem").read())
-session_key = bytes(get_random_bytes(16))
-
-# Encrypt the session key with the public RSA key
-cipher_rsa = PKCS1_OAEP.new(recipient_key)
-enc_session_key = cipher_rsa.encrypt(session_key)
-
-# Encrypt the data with the AES session key
-cipher_aes = AES.new(session_key, AES.MODE_EAX)
-ciphertext, tag = cipher_aes.encrypt_and_digest(bytes(data))
-[ file_out.write(x) for x in (enc_session_key, cipher_aes.nonce, tag, ciphertext) ]
-"""
+decrypted = rsa.decrypt(cipherText, privkey)
+print("\n RSA Decrypted Message: ", decrypted)
