@@ -61,57 +61,20 @@ class Miner{
 }
 
 class Block{
-    constructor(index, data, previousHash, minerSignature, difficulty){
+    constructor(index, data, previousHash, minerSignature){
         this.index = index;
         this.data = data;
         this.previousHash = previousHash;
         this.minerSignature = minerSignature;
-        this.nonce = new Uint8Array(16).fill(0);
-        this.difficulty = difficulty;
         this.hash = this.calcualteHash();
     }
 
     calcualteHash(){
-        // TODO: Re-hash this LOL
-        //return SHA256(this.previousHash, + this.nonce + this.index + JSON.stringify(this.data)).toString();
-        return SHA256(JSON.stringify(this.nonce)).toString();
+        //return SHA256(this.index + this.data + this.previousHash + this.data.customerSignature + this.data.merchantSignature).toString(); 
+        return SHA256(this.index + JSON.stringify(this.data), this.previousHash).toString();
     }
 
-    incrementNonce(){
-        let cary = 1;
-        let nonceLength = this.nonce.length;
-        for(let i=0; i<nonceLength; i++){
-            let prev = this.nonce[i];
-            this.nonce[i] += cary;
-            cary = prev > this.nonce[i] ? 1 : 0;
-        };
-    }
 
-    validateHash(){
-        // TODO: The assignment is actually asking for n leading 0-bits
-        for(let i=0; i<=this.difficulty; i++){
-            if(this.hash[i] != '0') {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    calculateNonceHash(){
-        this.hash = this.calcualteHash();
-        let count = 0;
-        while(!this.validateHash() & count < 5){
-            console.log(this.nonce);
-            console.log(this.hash);
-            console.log("\n");
-            this.incrementNonce();
-            this.hash = this.calcualteHash();
-            count ++;
-        }
-        console.log(this.nonce);
-        console.log(this.hash);
-        console.log("\n");
-    }
 }
 
 class BlockChain{
@@ -129,11 +92,12 @@ class BlockChain{
 
     addBlock(newBlock){
         newBlock.previousHash = this.getLatestBlock().hash;
-        newBlock.calculateNonceHash();
+        newBlock.hash = newBlock.calcualteHash();
         this.chain.push(newBlock);
     }
 
     isChainValid(){
+        console.log("chain.length = ", this.chain.length);
         for(let i=1; i<this.chain.length; i++){
             const currentBlock = this.chain[i];
             const previousBlock = this.chain[i-1];
@@ -209,7 +173,7 @@ for(let i=0; i<25; i++){
     transactions.push(transaction);
     let previousHash = trippCoin.chain[i];
     let minerSignature = pickAxe.signTransaction(transaction);
-    let block = new Block(i + 1, transaction, previousHash, minerSignature, 2);
+    let block = new Block(i + 1, transaction, previousHash, minerSignature);
     trippCoin.addBlock(block);
 }
 
