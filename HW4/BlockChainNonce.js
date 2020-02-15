@@ -65,10 +65,29 @@ class Block{
         this.index = index;
         this.data = data;
         this.previousHash = previousHash;
-        this.minerSignature = minerSignature;
+        this.minerSignature = minerSignature;ls
         this.nonce = new Uint8Array(16).fill(0);
         this.difficulty = difficulty;
         this.hash = this.calcualteHash();
+    }
+
+    hexDict = {'0':0, '1':1, '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, '8':8,
+            '9':9, 'a':10, 'b':11, 'c':12, 'd':13, 'e':14, 'f':15};
+
+    leadingZeroBitsToMax(){
+        // Exammple: 3 leading zeros
+        // 00011 1111 1111 1111
+        // Max Value = 1111 1111 1111 1111 - 1110 0000 0000 0000
+        // We only need up to 15 bits
+        let maxVal = 0;
+        for(let bitLoc=15; bitLoc>15-this.difficulty; bitLoc--){
+            maxVal+= 2^bitLoc;
+        }
+        return maxVal;// We need to stay under this value
+    }
+
+    hexStrToInt(hexStr){
+        hexStr[0];
     }
 
     calcualteHash(){
@@ -89,6 +108,9 @@ class Block{
 
     validateHash(){
         // TODO: The assignment is actually asking for n leading 0-bits
+        // Our code produces a hex string so we need to first convert them to numeric and set bounds
+        // HEX: 0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f
+
         for(let i=0; i<=this.difficulty; i++){
             if(this.hash[i] != '0') {
                 return false;
