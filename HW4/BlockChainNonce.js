@@ -1,26 +1,26 @@
 const SHA256 = require('crypto-js/sha256');
 const EC = require('elliptic').ec;
 var ec = new EC('secp256k1');
-
+const { performance } = require('perf_hooks'); //object destructuring
 // Class for individual transactions including signatures
 class Transaction{
     constructor(customerPubKey, merchantPubKey, amount){
-        this.customerPubKey = customerPubKey;
-        this.merchantPubKey = merchantPubKey;
+        this.customerPubKey = customerPubKey;// Field 1
+        this.merchantPubKey = merchantPubKey;// Field 2
         let date = new Date(Date.now());
-        this.transDate = date.getMonth() + date.getDate() + date.getYear();
-        this.amount = amount;
-        this.customerSignature;
-        this.merchantSignature;
+        this.transDate = date.getMonth() + date.getDate() + date.getYear();// Field 3
+        this.amount = amount;// Field 4
+        this.customerSignature;// Field 5
+        this.merchantSignature;// Field 6
     }
 
     // Apply the Customers Signature
     CustomerSign(customerPrivKey){
         // Concatenate all data together into a single string
-        let fields = this.customerPubKey;
-        fields += this.merchantPubKey;
-        fields += this.transDate;
-        fields += this.amount;
+        let fields = this.customerPubKey;// Field 1
+        fields += this.merchantPubKey;// Field 2
+        fields += this.transDate;// Field 3
+        fields += this.amount;// Field 4
 
         // Get the one-way hash of this string
         let hash = SHA256(fields);
@@ -32,11 +32,11 @@ class Transaction{
     // Apply the Merchants Signature
     MerchantSign(merchantPrivKey){
         // Concatenate all data together into a single string
-        let fields = this.customerPubKey;
-        fields += this.merchantPubKey;
-        fields += this.transDate;
-        fields += this.amount;
-        fields += this.customerSignature;
+        let fields = this.customerPubKey;// Field 1
+        fields += this.merchantPubKey;// Field 2
+        fields += this.transDate;// Field 3
+        fields += this.amount;// Field 4
+        fields += this.customerSignature;// Field 5
 
         // Get the one-way hash of this string
         let hash = SHA256(fields);
@@ -62,17 +62,23 @@ class Miner{
 
 class Block{
     constructor(index, data, previousHash, minerSignature, difficulty){
-        this.index = index;
-        this.data = data;
-        this.previousHash = previousHash;
-        this.minerSignature = minerSignature;ls
+        this.data = data;// Fields 1-6 Transaction
+        this.index = index;// Field 7 Block Sequence Number (added by Miner)
+        this.previousHash = previousHash;// Field 8 (added by Miner)
+        this.minerSignature = minerSignature;// Field 9 (added by Miner)
         this.nonce = new Uint8Array(16).fill(0);
         this.difficulty = difficulty;
-        this.hash = this.calcualteHash();
+        this.hash = this.calculateHash();
+        this.hexDict = {'0':0, '1':1, '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, '8':8,
+            '9':9, 'a':10, 'b':11, 'c':12, 'd':13, 'e':14, 'f':15};
     }
 
-    hexDict = {'0':0, '1':1, '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, '8':8,
-            '9':9, 'a':10, 'b':11, 'c':12, 'd':13, 'e':14, 'f':15};
+    // Convert our Nonce (Unit8 ByteArray) to a Hex String
+    nonceToHexString(){
+        return Array.from(this.nonce, (byte) => {
+            return ('0' + (byte & 0xFF).toString(16)).slice(-2)
+        }).join('');
+    }
 
     leadingZeroBitsToMax(){
         // Exammple: 3 leading zeros
@@ -86,16 +92,21 @@ class Block{
         return maxVal;// We need to stay under this value
     }
 
-    hexStrToInt(hexStr){
-        hexStr[0];
+    // Used to convert the first two chars (MSB's) of hash into an integer value
+    hexStrToInt(){
+        let largerByte = this.hash[this.hash.length - 1];
+        let smallerByte = this.hash[this.hash.length - 2];
+        return 16*this.hexDict[largerByte] + this.hexDict[smallerByte];
     }
 
-    calcualteHash(){
-        // TODO: Re-hash this LOL
-        //return SHA256(this.previousHash, + this.nonce + this.index + JSON.stringify(this.data)).toString();
-        return SHA256(JSON.stringify(this.nonce)).toString();
+    // Perform SHA256 hash over (previous block hash || Nonce || fields 1-7)
+    calculateHash(){
+        // Fields 1-7: (1-6) Transaction, (7) Sequence Number
+        //console.log(`Hash Input: ${this.previousHash + this.nonceToHexString() + JSON.stringify(this.data) + this.index}`)
+        return SHA256(this.previousHash + this.nonceToHexString() + JSON.stringify(this.data) + this.index).toString();
     }
 
+    // Used to increment our nonce byte array, carring overflow values to the next byte
     incrementNonce(){
         let cary = 1;
         let nonceLength = this.nonce.length;
@@ -106,11 +117,11 @@ class Block{
         };
     }
 
+    // Verifiies that hash meets difficulty requirement "Proof of Work"
     validateHash(){
-        // TODO: The assignment is actually asking for n leading 0-bits
         // Our code produces a hex string so we need to first convert them to numeric and set bounds
         // HEX: 0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f
-
+        let leadingValue = this.hexStrToInt();// This is the two MSB from our hex string hash
         for(let i=0; i<=this.difficulty; i++){
             if(this.hash[i] != '0') {
                 return false;
@@ -119,23 +130,24 @@ class Block{
         return true;
     }
 
+    // Brute force a solution to determine the minumum Nonce that meets difficulty requirement
     calculateNonceHash(){
-        this.hash = this.calcualteHash();
-        let count = 0;
-        while(!this.validateHash() & count < 5){
-            console.log(this.nonce);
-            console.log(this.hash);
-            console.log("\n");
+        let runTime = performance.now();
+        this.hash = this.calculateHash();
+        let count = 1;
+        while(!this.validateHash()){
             this.incrementNonce();
-            this.hash = this.calcualteHash();
+            this.hash = this.calculateHash();
             count ++;
         }
-        console.log(this.nonce);
-        console.log(this.hash);
-        console.log("\n");
+        runTime = performance.now() - runTime;
+        let output = `Case# ${"caseNumber"} Block# ${this.index}`;
+        output += ` # of Nonces Attempted ${count} Computaion time ${runTime} (ms)\n`;
+        console.log(output);
     }
 }
 
+// The Block Chain itself
 class BlockChain{
     constructor(){
         this.chain = [this.createGenesisBlock()];
@@ -159,10 +171,10 @@ class BlockChain{
         for(let i=1; i<this.chain.length; i++){
             const currentBlock = this.chain[i];
             const previousBlock = this.chain[i-1];
-            if(currentBlock.hash != currentBlock.calcualteHash()){
+            if(currentBlock.hash != currentBlock.calculateHash()){
                 return false;
             }
-            if(currentBlock.previousHash != previousBlock.calcualteHash()){
+            if(currentBlock.previousHash != previousBlock.calculateHash()){
                 return false;
             }
         }
