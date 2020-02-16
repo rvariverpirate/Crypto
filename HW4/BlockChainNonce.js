@@ -2,6 +2,9 @@ const SHA256 = require('crypto-js/sha256');
 const EC = require('elliptic').ec;
 var ec = new EC('secp256k1');
 const { performance } = require('perf_hooks'); //object destructuring
+
+
+
 // Class for individual transactions including signatures
 class Transaction{
     constructor(customerPubKey, merchantPubKey, amount){
@@ -81,22 +84,30 @@ class Block{
     }
 
     leadingZeroBitsToMax(){
+        // We really only need to calculate this once in the constructor
         // Exammple: 3 leading zeros
-        // 00011 1111 1111 1111
+        // 000xx xxxx xxxx xxxx
+        // must be less than
+        // 111xx xxxx xxxx xxxx
         // Max Value = 1111 1111 1111 1111 - 1110 0000 0000 0000
         // We only need up to 15 bits
         let maxVal = 0;
-        for(let bitLoc=15; bitLoc>15-this.difficulty; bitLoc--){
-            maxVal+= 2^bitLoc;
+        // Count down from 15 to (15-difficulty + 1)
+        // let difficulty = 3
+        // (15-3) + 1 = 13 => 15, 14, 13 => 1110 0000 0000 0000
+        for(let bitLoc=15; bitLoc>15 - this.difficulty; bitLoc--){
+            maxVal+= Math.pow(2, bitLoc);
         }
-        return maxVal;// We need to stay under this value
+        return Math.pow(2, 16) - maxVal;// We need to stay under this value
     }
 
     // Used to convert the first two chars (MSB's) of hash into an integer value
     hexStrToInt(){
-        let largerByte = this.hash[this.hash.length - 1];
-        let smallerByte = this.hash[this.hash.length - 2];
-        return 16*this.hexDict[largerByte] + this.hexDict[smallerByte];
+        let byteA = this.hash[0];// 16^3's
+        let byteB = this.hash[1];// 16^2's
+        let byteC = this.hash[2];// 16^1's
+        let byteD = this.hash[3];// 16^0's
+        return 4096*this.hexDict[byteA] + 256*this.hexDict[byteB] + 16*this.hexDict[byteC] +  this.hexDict[byteD];
     }
 
     // Perform SHA256 hash over (previous block hash || Nonce || fields 1-7)
@@ -122,10 +133,9 @@ class Block{
         // Our code produces a hex string so we need to first convert them to numeric and set bounds
         // HEX: 0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f
         let leadingValue = this.hexStrToInt();// This is the two MSB from our hex string hash
-        for(let i=0; i<=this.difficulty; i++){
-            if(this.hash[i] != '0') {
-                return false;
-            }
+        let tooHigh = this.leadingZeroBitsToMax();// We must be under this number for the Proof of Work
+        if(leadingValue >= tooHigh){
+            return false;
         }
         return true;
     }
@@ -141,7 +151,7 @@ class Block{
             count ++;
         }
         runTime = performance.now() - runTime;
-        let output = `Case# ${"caseNumber"} Block# ${this.index}`;
+        let output = `Difficulty# ${this.difficulty} Block# ${this.index}`;
         output += ` # of Nonces Attempted ${count} Computaion time ${runTime} (ms)\n`;
         console.log(output);
     }
@@ -228,79 +238,90 @@ var pickAxe = new Miner();
 // Implement the Block Chain
 let trippCoin = new BlockChain();
 
-// Generate 25 Random Transactions
+// Assign the various levels of Diffifuclty
+let difficulties = [0, 5, 10];
+
+// Number of Transactions to Generate at each level
+let numTransactions = 25;
 let transactions = [];
-for(let i=0; i<25; i++){
-    let amount = RandInt(0, 300);
-    let merchant = merchants[RandInt(0, merchants.length - 1)];
-    let customer = customers[RandInt(0, customers.length - 1)];
-    let transaction = new Transaction(customer.publicKey, merchant.publicKey, amount);
 
-    // Apply Customer and Merchant Signatures
-    transaction.CustomerSign(customer.privateKey);
-    transaction.MerchantSign(merchant.privateKey);
+difficulties.forEach((diff) => {
+    // Generate 25 Random Transactions
+    transactions = [];
+    for(let i=0; i<=numTransactions; i++){
+        let amount = RandInt(0, 300);
+        let merchant = merchants[RandInt(0, merchants.length - 1)];
+        let customer = customers[RandInt(0, customers.length - 1)];
+        let transaction = new Transaction(customer.publicKey, merchant.publicKey, amount);
 
-    transactions.push(transaction);
-    let previousHash = trippCoin.chain[i];
-    let minerSignature = pickAxe.signTransaction(transaction);
-    let block = new Block(i + 1, transaction, previousHash, minerSignature, 2);
-    trippCoin.addBlock(block);
-}
+        // Apply Customer and Merchant Signatures
+        transaction.CustomerSign(customer.privateKey);
+        transaction.MerchantSign(merchant.privateKey);
 
-console.log("\n\n");
+        transactions.push(transaction);
+        let previousHash = trippCoin.chain[i];
+        let minerSignature = pickAxe.signTransaction(transaction);
+        let block = new Block(i + 1, transaction, previousHash, minerSignature, diff);
+        trippCoin.addBlock(block);
+    }
+})
+
+//console.log("\n\n");
 // (1) Print Transactions 1-4
-console.log("(1)");
+//console.log("(1)");
 for(i=0; i<4; i++){
     let transaction = transactions[i];
-    console.log("Merchant Public Key: ", JSON.stringify(transaction.merchantPubKey));
+    /*console.log("Merchant Public Key: ", JSON.stringify(transaction.merchantPubKey));
     console.log("Customer Public Key: ",  JSON.stringify(transaction.customerPubKey));
     console.log("Transaction Date: ",  transaction.transDate);
     console.log("Amount: ",  transaction.amount);
-    console.log("\n");
+    console.log("\n");*/
 }
 
 // (2) Increment Ammount of Tranaction #15 by 
-console.log("(2)")
+//console.log("(2)")
 let blockIdx = 15;
-console.log("Original Amount =  ", trippCoin.chain[blockIdx].data.amount);
+//console.log("Original Amount =  ", trippCoin.chain[blockIdx].data.amount);
 // Check the validity of the BlockChain
 //console.log(trippCoin.chain[blockIdx], "\n\n");
-console.log("Block Chain Validity = ", trippCoin.isChainValid());
-console.log("\n\n");
+//console.log("Block Chain Validity = ", trippCoin.isChainValid());
+//console.log("\n\n");
 
 // Tamper with the data
 trippCoin.chain[2].data.amount += 10;
-console.log("Tampered Amount = ", trippCoin.chain[blockIdx].data.amount);
+//console.log("Tampered Amount = ", trippCoin.chain[blockIdx].data.amount);
 // Check the validity of the BlockChain
 //console.log(trippCoin.chain[blockIdx], "\n\n");
-console.log("Block Chain Validity = ", trippCoin.isChainValid());
+//console.log("Block Chain Validity = ", trippCoin.isChainValid());
 
 // (3) Search Through the Blockchain and print all transactions for Customer #3
-console.log("(3)");
-console.log("\n\n Customer # 3 Transactions: ");
+/*console.log("(3)");
+console.log("\n\n Customer # 3 Transactions: ");*/
 customer3PubSig = customers[2].publicKey;
 trippCoin.chain.forEach((block) => {
     if(block.data.customerPubKey == customer3PubSig){
         let transaction = block.data;
-        console.log("Merchant Public Key: ", JSON.stringify(transaction.merchantPubKey));
+        /*console.log("Merchant Public Key: ", JSON.stringify(transaction.merchantPubKey));
         console.log("Customer Public Key: ",  JSON.stringify(transaction.customerPubKey));
         console.log("Transaction Date: ",  transaction.transDate);
         console.log("Amount: ",  transaction.amount);
-        console.log("\n");
+        console.log("\n");*/
     }
 });
 
 // (4) Search Through the Blockchain and print all transactions for Merchant #2
-console.log("(4)");
-console.log("\n\n Merchant # 2 Transactions: ");
+/*console.log("(4)");
+console.log("\n\n Merchant # 2 Transactions: ");*/
 merchant2PubSig = merchants[1].publicKey;
 trippCoin.chain.forEach((block) => {
     if(block.data.merchantPubKey == merchant2PubSig){
         let transaction = block.data;
+        /*
         console.log("Merchant Public Key: ", JSON.stringify(transaction.merchantPubKey));
         console.log("Customer Public Key: ",  JSON.stringify(transaction.customerPubKey));
         console.log("Transaction Date: ",  transaction.transDate);
         console.log("Amount: ",  transaction.amount);
         console.log("\n");
+        */
     }
 });
