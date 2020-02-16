@@ -10,8 +10,8 @@ class Transaction{
     constructor(customerPubKey, merchantPubKey, amount){
         this.customerPubKey = customerPubKey;// Field 1
         this.merchantPubKey = merchantPubKey;// Field 2
-        let date = new Date(Date.now());
-        this.transDate = date.getMonth() + date.getDate() + date.getYear();// Field 3
+        let date = new Date();
+        this.transDate = date.getMonth().toString() + date.getDate().toString() + date.getFullYear().toString();// Field 3
         this.amount = amount;// Field 4
         this.customerSignature;// Field 5
         this.merchantSignature;// Field 6
