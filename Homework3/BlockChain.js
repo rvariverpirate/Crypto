@@ -61,79 +61,20 @@ class Miner{
 }
 
 class Block{
-    constructor(index, data, previousHash, minerSignature, difficulty){
+    constructor(index, data, previousHash, minerSignature){
         this.index = index;
         this.data = data;
         this.previousHash = previousHash;
-        this.minerSignature = minerSignature;ls
-        this.nonce = new Uint8Array(16).fill(0);
-        this.difficulty = difficulty;
+        this.minerSignature = minerSignature;
         this.hash = this.calcualteHash();
-    }
-
-    hexDict = {'0':0, '1':1, '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, '8':8,
-            '9':9, 'a':10, 'b':11, 'c':12, 'd':13, 'e':14, 'f':15};
-
-    leadingZeroBitsToMax(){
-        // Exammple: 3 leading zeros
-        // 00011 1111 1111 1111
-        // Max Value = 1111 1111 1111 1111 - 1110 0000 0000 0000
-        // We only need up to 15 bits
-        let maxVal = 0;
-        for(let bitLoc=15; bitLoc>15-this.difficulty; bitLoc--){
-            maxVal+= 2^bitLoc;
-        }
-        return maxVal;// We need to stay under this value
-    }
-
-    hexStrToInt(hexStr){
-        hexStr[0];
     }
 
     calcualteHash(){
-        // TODO: Re-hash this LOL
-        //return SHA256(this.previousHash, + this.nonce + this.index + JSON.stringify(this.data)).toString();
-        return SHA256(JSON.stringify(this.nonce)).toString();
+        //return SHA256(this.index + this.data + this.previousHash + this.data.customerSignature + this.data.merchantSignature).toString(); 
+        return SHA256(this.index + JSON.stringify(this.data), this.previousHash).toString();
     }
 
-    incrementNonce(){
-        let cary = 1;
-        let nonceLength = this.nonce.length;
-        for(let i=0; i<nonceLength; i++){
-            let prev = this.nonce[i];
-            this.nonce[i] += cary;
-            cary = prev > this.nonce[i] ? 1 : 0;
-        };
-    }
 
-    validateHash(){
-        // TODO: The assignment is actually asking for n leading 0-bits
-        // Our code produces a hex string so we need to first convert them to numeric and set bounds
-        // HEX: 0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f
-
-        for(let i=0; i<=this.difficulty; i++){
-            if(this.hash[i] != '0') {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    calculateNonceHash(){
-        this.hash = this.calcualteHash();
-        let count = 0;
-        while(!this.validateHash() & count < 5){
-            console.log(this.nonce);
-            console.log(this.hash);
-            console.log("\n");
-            this.incrementNonce();
-            this.hash = this.calcualteHash();
-            count ++;
-        }
-        console.log(this.nonce);
-        console.log(this.hash);
-        console.log("\n");
-    }
 }
 
 class BlockChain{
@@ -151,11 +92,12 @@ class BlockChain{
 
     addBlock(newBlock){
         newBlock.previousHash = this.getLatestBlock().hash;
-        newBlock.calculateNonceHash();
+        newBlock.hash = newBlock.calcualteHash();
         this.chain.push(newBlock);
     }
 
     isChainValid(){
+        console.log("chain.length = ", this.chain.length);
         for(let i=1; i<this.chain.length; i++){
             const currentBlock = this.chain[i];
             const previousBlock = this.chain[i-1];
@@ -231,7 +173,7 @@ for(let i=0; i<25; i++){
     transactions.push(transaction);
     let previousHash = trippCoin.chain[i];
     let minerSignature = pickAxe.signTransaction(transaction);
-    let block = new Block(i + 1, transaction, previousHash, minerSignature, 2);
+    let block = new Block(i + 1, transaction, previousHash, minerSignature);
     trippCoin.addBlock(block);
 }
 
