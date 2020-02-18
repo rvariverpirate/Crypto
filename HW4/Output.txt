@@ -1,0 +1,155 @@
+Difficulty# 0 Block# 1 # of Nonces Attempted 1 Computaion time 3.257600001990795 (ms)
+
+Difficulty# 0 Block# 2 # of Nonces Attempted 1 Computaion time 0.7072999998927116 (ms)
+
+Difficulty# 0 Block# 3 # of Nonces Attempted 1 Computaion time 0.27639999985694885 (ms)
+
+Difficulty# 0 Block# 4 # of Nonces Attempted 1 Computaion time 6.807900998741388 (ms)
+
+Difficulty# 0 Block# 5 # of Nonces Attempted 1 Computaion time 0.2095009982585907 (ms)
+
+Difficulty# 0 Block# 6 # of Nonces Attempted 1 Computaion time 0.21150000020861626 (ms)
+
+Difficulty# 0 Block# 7 # of Nonces Attempted 1 Computaion time 0.3846000023186207 (ms)
+
+Difficulty# 0 Block# 8 # of Nonces Attempted 1 Computaion time 0.3407999984920025 (ms)
+
+Difficulty# 0 Block# 9 # of Nonces Attempted 1 Computaion time 0.1946990005671978 (ms)
+
+Difficulty# 0 Block# 10 # of Nonces Attempted 1 Computaion time 0.279899999499321 (ms)
+
+Difficulty# 0 Block# 11 # of Nonces Attempted 1 Computaion time 0.18039899691939354 (ms)
+
+Difficulty# 0 Block# 12 # of Nonces Attempted 1 Computaion time 0.24599899724125862 (ms)
+
+Difficulty# 0 Block# 13 # of Nonces Attempted 1 Computaion time 0.17890099808573723 (ms)
+
+Difficulty# 0 Block# 14 # of Nonces Attempted 1 Computaion time 0.22580000013113022 (ms)
+
+Difficulty# 0 Block# 15 # of Nonces Attempted 1 Computaion time 0.3352000005543232 (ms)
+
+Difficulty# 0 Block# 16 # of Nonces Attempted 1 Computaion time 0.4343999996781349 (ms)
+
+Difficulty# 0 Block# 17 # of Nonces Attempted 1 Computaion time 0.8691000007092953 (ms)
+
+Difficulty# 0 Block# 18 # of Nonces Attempted 1 Computaion time 0.3596000000834465 (ms)
+
+Difficulty# 0 Block# 19 # of Nonces Attempted 1 Computaion time 0.15239999815821648 (ms)
+
+Difficulty# 0 Block# 20 # of Nonces Attempted 1 Computaion time 0.155799999833107 (ms)
+
+Difficulty# 0 Block# 21 # of Nonces Attempted 1 Computaion time 0.1526009999215603 (ms)
+
+Difficulty# 0 Block# 22 # of Nonces Attempted 1 Computaion time 0.3046000003814697 (ms)
+
+Difficulty# 0 Block# 23 # of Nonces Attempted 1 Computaion time 0.153499998152256 (ms)
+
+Difficulty# 0 Block# 24 # of Nonces Attempted 1 Computaion time 0.18409999832510948 (ms)
+
+Difficulty# 0 Block# 25 # of Nonces Attempted 1 Computaion time 0.15279999747872353 (ms)
+
+Difficulty# 0 Block# 26 # of Nonces Attempted 1 Computaion time 0.25940000265836716 (ms)
+
+Difficulty# 5 Block# 1 # of Nonces Attempted 35 Computaion time 8.29730100184679 (ms)
+
+Difficulty# 5 Block# 2 # of Nonces Attempted 69 Computaion time 13.651599001139402 (ms)
+
+Difficulty# 5 Block# 3 # of Nonces Attempted 69 Computaion time 10.458799000829458 (ms)
+
+Difficulty# 5 Block# 4 # of Nonces Attempted 72 Computaion time 10.70329999923706 (ms)
+
+Difficulty# 5 Block# 5 # of Nonces Attempted 31 Computaion time 6.14920100197196 (ms)
+
+Difficulty# 5 Block# 6 # of Nonces Attempted 19 Computaion time 2.1050990000367165 (ms)
+
+Difficulty# 5 Block# 7 # of Nonces Attempted 2 Computaion time 0.41530000045895576 (ms)
+
+Difficulty# 5 Block# 8 # of Nonces Attempted 15 Computaion time 2.8330990001559258 (ms)
+
+Difficulty# 5 Block# 9 # of Nonces Attempted 4 Computaion time 0.8205999992787838 (ms)
+
+Difficulty# 5 Block# 10 # of Nonces Attempted 82 Computaion time 10.683799002319574 (ms)
+
+Difficulty# 5 Block# 11 # of Nonces Attempted 17 Computaion time 2.288400001823902 (ms)
+
+Difficulty# 5 Block# 12 # of Nonces Attempted 80 Computaion time 8.811599001288414 (ms)
+
+Difficulty# 5 Block# 13 # of Nonces Attempted 80 Computaion time 9.567299999296665 (ms)
+
+Difficulty# 5 Block# 14 # of Nonces Attempted 14 Computaion time 2.312601000070572 (ms)
+
+Difficulty# 5 Block# 15 # of Nonces Attempted 7 Computaion time 1.3087009973824024 (ms)
+
+Difficulty# 5 Block# 16 # of Nonces Attempted 19 Computaion time 2.602599997073412 (ms)
+
+Difficulty# 5 Block# 17 # of Nonces Attempted 6 Computaion time 0.6366999968886375 (ms)
+
+Difficulty# 5 Block# 18 # of Nonces Attempted 13 Computaion time 1.3927000015974045 (ms)
+
+Difficulty# 5 Block# 19 # of Nonces Attempted 52 Computaion time 6.512000001966953 (ms)
+
+Difficulty# 5 Block# 20 # of Nonces Attempted 57 Computaion time 6.208500001579523 (ms)
+
+Difficulty# 5 Block# 21 # of Nonces Attempted 3 Computaion time 0.5677000023424625 (ms)
+
+Difficulty# 5 Block# 22 # of Nonces Attempted 4 Computaion time 0.5982999987900257 (ms)
+
+Difficulty# 5 Block# 23 # of Nonces Attempted 15 Computaion time 2.7252999991178513 (ms)
+
+Difficulty# 5 Block# 24 # of Nonces Attempted 38 Computaion time 4.594300001859665 (ms)
+
+Difficulty# 5 Block# 25 # of Nonces Attempted 24 Computaion time 2.653999999165535 (ms)
+
+Difficulty# 5 Block# 26 # of Nonces Attempted 51 Computaion time 5.6587000004947186 (ms)
+
+Difficulty# 10 Block# 1 # of Nonces Attempted 697 Computaion time 80.46680100262165 (ms)
+
+Difficulty# 10 Block# 2 # of Nonces Attempted 2667 Computaion time 310.41750000044703 (ms)
+
+Difficulty# 10 Block# 3 # of Nonces Attempted 386 Computaion time 42.54060100018978 (ms)
+
+Difficulty# 10 Block# 4 # of Nonces Attempted 139 Computaion time 16.29500000178814 (ms)
+
+Difficulty# 10 Block# 5 # of Nonces Attempted 41 Computaion time 4.133799999952316 (ms)
+
+Difficulty# 10 Block# 6 # of Nonces Attempted 520 Computaion time 55.82950000092387 (ms)
+
+Difficulty# 10 Block# 7 # of Nonces Attempted 427 Computaion time 46.75069899857044 (ms)
+
+Difficulty# 10 Block# 8 # of Nonces Attempted 450 Computaion time 45.717599999159575 (ms)
+
+Difficulty# 10 Block# 9 # of Nonces Attempted 4546 Computaion time 483.8024000003934 (ms)
+
+Difficulty# 10 Block# 10 # of Nonces Attempted 66 Computaion time 12.158900000154972 (ms)
+
+Difficulty# 10 Block# 11 # of Nonces Attempted 306 Computaion time 47.246899999678135 (ms)
+
+Difficulty# 10 Block# 12 # of Nonces Attempted 803 Computaion time 88.73270000144839 (ms)
+
+Difficulty# 10 Block# 13 # of Nonces Attempted 10 Computaion time 1.8815999999642372 (ms)
+
+Difficulty# 10 Block# 14 # of Nonces Attempted 277 Computaion time 44.37099999934435 (ms)
+
+Difficulty# 10 Block# 15 # of Nonces Attempted 152 Computaion time 22.200900997966528 (ms)
+
+Difficulty# 10 Block# 16 # of Nonces Attempted 1005 Computaion time 124.23000000044703 (ms)
+
+Difficulty# 10 Block# 17 # of Nonces Attempted 531 Computaion time 57.47819999977946 (ms)
+
+Difficulty# 10 Block# 18 # of Nonces Attempted 11 Computaion time 1.3475989997386932 (ms)
+
+Difficulty# 10 Block# 19 # of Nonces Attempted 157 Computaion time 16.22850099951029 (ms)
+
+Difficulty# 10 Block# 20 # of Nonces Attempted 318 Computaion time 32.47230000048876 (ms)
+
+Difficulty# 10 Block# 21 # of Nonces Attempted 18 Computaion time 1.6011999994516373 (ms)
+
+Difficulty# 10 Block# 22 # of Nonces Attempted 1939 Computaion time 243.31119999662042 (ms)
+
+Difficulty# 10 Block# 23 # of Nonces Attempted 1155 Computaion time 111.2694000005722 (ms)
+
+Difficulty# 10 Block# 24 # of Nonces Attempted 38 Computaion time 3.7815000005066395 (ms)
+
+Difficulty# 10 Block# 25 # of Nonces Attempted 105 Computaion time 10.44649999961257 (ms)
+
+Difficulty# 10 Block# 26 # of Nonces Attempted 238 Computaion time 25.300900001078844 (ms)
